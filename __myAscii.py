@@ -125,39 +125,39 @@ list_ascii = ['NUL','SOH',
 '}',
 '~',
 'DEL',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
-'',
+'€',
 '',
+'‚',
+'ƒ',
+'„',
+'…',
+'†',
+'‡',
+'ˆ',
+'‰',
+'Š',
+'‹',
+'Œ',
+'',
+'Ž',
+'',
+'',
+'‘',
+'’',
+'“',
+'”',
+'•',
+'–',
+'—',
+'˜',
+'™',
+'š',
+'›',
+'œ',
+'',
+'ž',
+'Ÿ',
+'P',
 '¡',
 '¢',
 '£',
@@ -170,7 +170,7 @@ list_ascii = ['NUL','SOH',
 'ª',
 '«',
 '¬',
-'­	',
+'Y',
 '®',
 '¯',
 '°',
@@ -256,7 +256,7 @@ list_ascii = ['NUL','SOH',
 
 
 
-def ascii(x, allow_error = False, extended= False):
+def ascii(x, allow_error = False, extended= False, default_error_char = '§', allow_control_values = False):
     '''
 
 
@@ -266,6 +266,8 @@ def ascii(x, allow_error = False, extended= False):
         allow_error (bool, optional): Function is not going to generate an error if character is not in ASCII table or index greater than ASCII table range
             defalut : False
         extended (bool, optional): Function will use ASCII-Extended version of table (range : 0-255)
+        allow_control_values (bool, optional): Function return control value. Ex : DEL, NULL, EXT
+        default_error_char (str, optional): what char is returned when value has error
 
     Returns
         ascii(x:int) -> str
@@ -300,14 +302,26 @@ def ascii(x, allow_error = False, extended= False):
         if extended:
             if x > 255:
                 if allow_error:
-                    return '§'
+                    return default_error_char
                 else:
                     raise ValueError(f'Valor {x} está fora do range da tabela ascci')
-            return list_ascii[x]
+            if not(allow_control_values):
+                if len(list_ascii[x]) > 1:
+                    return default_error_char
+                else:
+                    return list_ascii[x]
+            else:
+                return list_ascii[x]
         else:
-            if x > 128:
+            if x >= 128:
                 if allow_error:
-                    return '§'
+                    return default_error_char
                 else:
                     raise ValueError(f'Valor {x} está fora do range da tabela ascci')
-            return list_ascii[x]
+            if not(allow_control_values):
+                if len(list_ascii[x]) > 1:
+                    return default_error_char
+                else:
+                    return list_ascii[x]
+            else:
+                return list_ascii[x]
